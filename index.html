@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishna Darak — Portfolio</title>
+  <meta name="description" content="Krishna Darak — Aspiring Product Manager bridging technology and business strategy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- animated background layers -->
+  <div class="bg-aurora" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <a href="#hero" class="nav__brand" data-scroll>
+      <span class="nav__mark">KD</span>
+      <span class="nav__name">Krishna Darak</span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Primary"></nav>
+    <div class="nav__right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark theme" title="Toggle theme">
+        <span class="theme-toggle__icon">◐</span>
+      </button>
+      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero section" id="hero">
+      <div class="hero__inner">
+        <p class="hero__hello reveal">Hi, I'm</p>
+        <h1 class="hero__name reveal" id="heroName">Krishna Darak</h1>
+        <h2 class="hero__role reveal">
+          <span id="heroRole" class="hero__role-text"></span><span class="caret">|</span>
+        </h2>
+        <p class="hero__tagline reveal" id="heroTagline"></p>
+        <div class="hero__cta reveal">
+          <a href="#contact" class="btn btn--primary" data-scroll>Get in touch</a>
+          <a href="#experience" class="btn btn--ghost" data-scroll>View work</a>
+        </div>
+        <div class="hero__stats" id="heroStats"></div>
+      </div>
+      <a href="#about" class="hero__scroll" data-scroll aria-label="Scroll down">
+        <span class="mouse"><span class="wheel"></span></span>
+      </a>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="section__head reveal">
+        <span class="section__index">01</span>
+        <h2 class="section__title" id="aboutHeading">About Me</h2>
+      </div>
+      <div class="about" id="aboutBody"></div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="section__head reveal">
+        <span class="section__index">02</span>
+        <h2 class="section__title">Experience</h2>
+      </div>
+      <div class="timeline" id="experienceList"></div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
+      <div class="section__head reveal">
+        <span class="section__index">03</span>
+        <h2 class="section__title">Projects</h2>
+      </div>
+      <div class="cards" id="projectsList"></div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="section__head reveal">
+        <span class="section__index">04</span>
+        <h2 class="section__title">Skills</h2>
+      </div>
+      <div class="skills" id="skillsList"></div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education">
+      <div class="section__head reveal">
+        <span class="section__index">05</span>
+        <h2 class="section__title">Education</h2>
+      </div>
+      <div class="timeline timeline--edu" id="educationList"></div>
+    </section>
+
+    <!-- ACHIEVEMENTS (awards + certs + leadership) -->
+    <section class="section" id="achievements">
+      <div class="section__head reveal">
+        <span class="section__index">06</span>
+        <h2 class="section__title">Achievements &amp; More</h2>
+      </div>
+      <div class="grid-3">
+        <div class="panel reveal">
+          <h3 class="panel__title">Awards</h3>
+          <div id="awardsList"></div>
+        </div>
+        <div class="panel reveal">
+          <h3 class="panel__title">Certificates</h3>
+          <div id="certsList"></div>
+        </div>
+        <div class="panel reveal">
+          <h3 class="panel__title">Leadership</h3>
+          <div id="leadershipList"></div>
+        </div>
+      </div>
+      <div class="grid-2 grid-2--extras">
+        <div class="panel reveal">
+          <h3 class="panel__title">Interests</h3>
+          <div class="chips" id="interestsList"></div>
+        </div>
+        <div class="panel reveal">
+          <h3 class="panel__title">Languages</h3>
+          <div class="chips" id="languagesList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section__head reveal">
+        <span class="section__index">07</span>
+        <h2 class="section__title" id="contactHeading">Contact</h2>
+      </div>
+      <div class="contact reveal" id="contactBody"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p id="footerNote"></p>
+    <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
