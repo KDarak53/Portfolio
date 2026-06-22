@@ -166,9 +166,9 @@ const PORTFOLIO = {
     email: "your-email@example.com",          // <-- replace
     phone: "",                                 // optional, e.g. "+91 9XXXXXXXXX"
     socials: [
-      { label: "LinkedIn", url: "https://linkedin.com/in/your-handle", icon: "linkedin" }, // <-- replace
-      { label: "GitHub",   url: "https://github.com/your-handle",      icon: "github"   }, // <-- replace
-      { label: "Email",    url: "mailto:your-email@example.com",       icon: "mail"     }, // <-- replace
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/krishna-darak-9581b721a/", icon: "linkedin" }, // <-- replace
+      { label: "GitHub",   url: "https://github.com/KDarak53",      icon: "github"   }, // <-- replace
+      { label: "Email",    url: "mailto:krishna.darak53@gmail.com",       icon: "mail"     }, // <-- replace
     ],
   },
 
