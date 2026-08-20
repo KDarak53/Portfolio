@@ -15,19 +15,19 @@ const PORTFOLIO = {
     // Words in [brackets] get highlighted in the rotating hero headline.
     roles: [
       "Aspiring Product Manager",
-      "Technology × Business Strategist",
-      "Process Optimization Specialist",
+      "Engineering → Management",
+      "Process & Delivery Strategist",
       "PGPM Candidate @ Great Lakes",
     ],
     tagline:
-      "Results-oriented professional bridging technology and business strategy — adept at aligning cross-functional teams to mobilize resources and execute scalable product optimizations.",
+      "Engineering-turned-management professional bridging technology and business strategy — skilled at root-cause analysis, stakeholder alignment, and scaling execution through data-driven process design.",
     location: "Chennai, India",
     // Quick facts shown as animated counters in the hero.
     stats: [
       { value: 44, suffix: "+", label: "Months of Experience" },
       { value: 99.7, suffix: " %ile", label: "CAT Quant Score" },
       { value: 70, suffix: "%", label: "Quality Issues Reduced" },
-      { value: 30, suffix: "+", label: "Projects Delivered" },
+      { value: 32, suffix: "/yr", label: "Studio Output Scaled To" },
     ],
   },
 
@@ -35,16 +35,16 @@ const PORTFOLIO = {
   about: {
     heading: "About Me",
     paragraphs: [
-      "I'm a technologist turned business strategist, currently pursuing my PGPM at the Great Lakes Institute of Management, Chennai. Over four years in software engineering and product development, I learned how to turn messy, manual processes into clean, scalable systems.",
-      "I love sitting at the intersection of engineering and business — translating between the teams that build and the teams that decide. Whether it's automating reconciliation in a core banking platform or shaping a go-to-market strategy for a new brand, I'm happiest when I'm removing friction and unlocking capacity.",
+      "I'm an engineering-turned-management professional, currently pursuing my PGPM at the Great Lakes Institute of Management, Chennai. Over four years in software engineering and product delivery, I learned how to turn ambiguous, manual processes into structured, scalable systems — end-to-end, from problem identification through design, rollout, and iteration.",
+      "I sit comfortably at the intersection of engineering rigor and business judgment: root-causing delivery bottlenecks, aligning cross-functional stakeholders, and translating data into decisions that scale execution. Whether it's automating reconciliation in a core banking platform or redesigning a 7-stage delivery pipeline to triple studio output, I'm happiest when I'm removing friction and unlocking capacity.",
       "Outside of work, you'll find me high-altitude backpacking in the Himalayas or studying the markets.",
     ],
     // Add/remove freely — rendered as little highlight chips.
     highlights: [
-      "4+ years bridging engineering & product",
+      "4+ years bridging engineering & management",
       "MBA candidate (PGPM, Great Lakes)",
       "Top 0.3% CAT Quantitative Aptitude",
-      "Proven track record of on-time delivery",
+      "Structured, data-driven process design",
     ],
   },
 
@@ -63,10 +63,10 @@ const PORTFOLIO = {
       company: "Zensar Technologies",
       period: "Aug 2022 – Jan 2026",
       points: [
-        "Designed a workflow automation tool that cut 6 hours of effort per deliverable, improving team efficiency by 5% across 30 annual projects and increasing overall delivery capacity.",
-        "Reduced post-launch quality issues by 70% across 18 independent projects, saving up to 16 hours of rework per project while sustaining a consistently high quality standard.",
-        "Aligned diverse stakeholder teams to streamline project execution, resolving operational bottlenecks and achieving 100% on-time delivery.",
-        "Mentored and onboarded junior team members across the end-to-end project lifecycle, enabling them to deliver independently and improving overall team productivity by 20%.",
+        "Owned a 7-stage delivery process end-to-end, coordinating creative, QA, and PM teams to scale studio output from an industry-average 10 games/year to 32 games/year, maintaining 100% on-time delivery across 12 personally-led titles.",
+        "Identified the need for and independently built a workflow automation tool, cutting 6 hours of effort per deliverable and lifting team efficiency by 5% across 30 annual projects.",
+        "Root-caused recurring defects across 18 projects by team, stage, and cause, then redesigned the delivery process based on the findings — cutting post-launch quality issues by 70% and saving up to 16 hours of rework per project.",
+        "Managed a live client relationship under regulatory constraints, evaluating and delivering a late-stage customization request from a casino operator while protecting timeline, compliance requirements, and the account relationship.",
       ],
     },
   ],
@@ -81,16 +81,35 @@ const PORTFOLIO = {
       tags: ["Product Strategy", "Go-To-Market", "Financial Modeling"],
       link: "", // optional: add a URL to make the card clickable
     },
+    {
+      title: "MBA Desk",
+      tag: "Academic Project",
+      description:
+        "An AI-powered tool that turns a full day's newspaper into a curated, function-tagged business briefing in seconds — breaking each relevant story into a summary, business impact, and SWOT-based strategic read, so students walk into class or interviews with decision-ready insight instead of an hour of reading.",
+      tags: ["AI / LLM", "Product Design", "Business Strategy"],
+      link: "https://github.com/KDarak53/MBA-Desk-Desktop", // repo / source
+      downloadUrl: "https://raw.githubusercontent.com/KDarak53/MBA-Desk-Desktop/master/downloads/MBA%20Desk%20Setup.exe",
+      downloadLabel: "Download (.exe, 85 MB)",
+      videoUrl: "https://youtu.be/3lyZrkZxLj0",
+    },
+    {
+      title: "Macroeconomic Analysis — Portugal (FY2022–27)",
+      tag: "Academic Project",
+      description:
+        "Analyzed Portugal's economic trajectory across FY2022–25 actuals and FY2026–27 forecasts — spanning growth, inflation, labor markets, and trade-fiscal balances — surfacing 3 structural risks and recommending targeted policy interventions.",
+      tags: ["Macroeconomics", "Policy Analysis", "Forecasting"],
+      link: "",
+    },
   ],
 
   /* ---- Skills (value = proficiency 0–100 for the animated bars) -------- */
   skills: [
-    { name: "Product Management", level: 90 },
+    { name: "Structured Problem Solving", level: 90 },
+    { name: "Product Management", level: 88 },
     { name: "Stakeholder Management", level: 88 },
-    { name: "Process Optimization", level: 92 },
-    { name: "Data Analytics", level: 80 },
-    { name: "Agile Methodologies", level: 85 },
-    { name: "Risk Analysis", level: 78 },
+    { name: "Process Design", level: 92 },
+    { name: "Data-Driven Decision Making", level: 84 },
+    { name: "Risk & Compliance", level: 78 },
   ],
 
   /* ---- Education ------------------------------------------------------- */
@@ -150,20 +169,21 @@ const PORTFOLIO = {
   /* ---- Positions of responsibility & extras (mixed list cards) -------- */
   leadership: [
     { title: "Placement Coordinator", org: "Great Lakes (GLIM)", year: "2026" },
+    { title: "Project Lead", org: "Karma Yoga, GLIM", year: "2026" },
     { title: "Placement Coordinator", org: "PICT", year: "2022" },
     { title: "NSS Volunteer", org: "PICT", year: "2019–2022" },
   ],
 
   interests: ["High-Altitude Backpacking", "Stock Market Enthusiast"],
 
-  languages: ["English", "Hindi", "Marathi"],
+  languages: ["English", "Hindi", "Marathi", "Marwari"],
 
   /* ---- Contact (EDIT the placeholders below with your real links) ------ */
   contact: {
     heading: "Let's build something together",
     blurb:
       "Open to product management roles, collaborations, and conversations. Drop me a line — I'd love to hear from you.",
-    email: "your-email@example.com",          // <-- replace
+    email: "krishna.darak53@gmail.com",
     phone: "",                                 // optional, e.g. "+91 9XXXXXXXXX"
     socials: [
       { label: "LinkedIn", url: "https://www.linkedin.com/in/krishna-darak-9581b721a/", icon: "linkedin" }, // <-- replace

@@ -25,6 +25,12 @@
   };
   const icon = (k) => ICONS[k] || ICONS.link;
 
+  // Convert a YouTube watch/share URL into a privacy-enhanced embed URL.
+  function youtubeEmbedUrl(url) {
+    const m = String(url).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+    return m ? "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0" : url;
+  }
+
   /* ======================================================================
      RENDER
      ====================================================================== */
@@ -129,15 +135,19 @@
     const wrap = $("#projectsList");
     if (!wrap) return;
     list.forEach((pr, i) => {
-      const card = el("div", "card reveal tilt");
+      const card = el("div", "card reveal");
       card.dataset.delay = String(Math.min(i + 1, 4));
       const tags = (pr.tags || []).map((t) => "<span>" + esc(t) + "</span>").join("");
-      const link = pr.link ? '<a class="card__link" href="' + esc(pr.link) + '" target="_blank" rel="noopener">View project</a>' : "";
+      const actions = [];
+      if (pr.link) actions.push('<a class="card__link" href="' + esc(pr.link) + '" target="_blank" rel="noopener">View project</a>');
+      if (pr.downloadUrl) actions.push('<a class="card__link" href="' + esc(pr.downloadUrl) + '" download>' + esc(pr.downloadLabel || "Download") + "</a>");
+      if (pr.videoUrl) actions.push('<a class="card__link" href="' + esc(pr.videoUrl) + '" target="_blank" rel="noopener" data-video="' + esc(youtubeEmbedUrl(pr.videoUrl)) + '">Watch demo</a>');
       card.innerHTML =
         (pr.tag ? '<div class="card__tag">' + esc(pr.tag) + "</div>" : "") +
         '<h3 class="card__title">' + esc(pr.title) + "</h3>" +
         '<p class="card__desc">' + esc(pr.description) + "</p>" +
-        '<div class="card__tags">' + tags + "</div>" + link;
+        '<div class="card__tags">' + tags + "</div>" +
+        (actions.length ? '<div class="card__actions">' + actions.join("") + "</div>" : "");
       wrap.appendChild(card);
     });
   }
@@ -363,30 +373,31 @@
       window.scrollTo({ top: 0, behavior: "smooth" }));
   }
 
-  // cursor glow + card spotlight + tilt
-  function pointerFx() {
-    const glow = $(".cursor-glow");
-    const fine = window.matchMedia("(pointer:fine)").matches;
-    if (fine && glow) {
-      window.addEventListener("pointermove", (e) => {
-        glow.style.opacity = "0.6";
-        glow.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px) translate(-50%,-50%)";
-      });
+  // video modal (opens data-video links inline instead of a new tab)
+  function videoModal() {
+    const modal = $("#videoModal");
+    const frame = $("#modalFrame");
+    if (!modal || !frame) return;
+    function open(src) {
+      frame.innerHTML =
+        '<iframe src="' + src + '" title="Project demo video" frameborder="0" ' +
+        'allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
     }
-    document.querySelectorAll(".card").forEach((card) => {
-      card.addEventListener("pointermove", (e) => {
-        const r = card.getBoundingClientRect();
-        const mx = e.clientX - r.left, my = e.clientY - r.top;
-        card.style.setProperty("--mx", mx + "px");
-        card.style.setProperty("--my", my + "px");
-        if (fine) {
-          const rx = (my / r.height - 0.5) * -6;
-          const ry = (mx / r.width - 0.5) * 6;
-          card.style.transform = "perspective(800px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-4px)";
-        }
-      });
-      card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+    function close() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      frame.innerHTML = "";
+      document.body.style.overflow = "";
+    }
+    document.addEventListener("click", (e) => {
+      const trigger = e.target.closest("[data-video]");
+      if (trigger) { e.preventDefault(); open(trigger.dataset.video); return; }
+      if (e.target.closest("[data-modal-close]")) close();
     });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
   }
 
   // hero parallax on scroll
@@ -402,52 +413,6 @@
     }, { passive: true });
   }
 
-  // lightweight particle field
-  function particles() {
-    const canvas = $("#particles");
-    if (!canvas) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const ctx = canvas.getContext("2d");
-    let w, h, pts;
-    function size() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-      const count = Math.min(70, Math.floor(w / 22));
-      pts = Array.from({ length: count }, () => ({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.8 + 0.6,
-      }));
-    }
-    function frame() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(167,139,250,0.5)";
-        ctx.fill();
-        for (let j = i + 1; j < pts.length; j++) {
-          const q = pts[j];
-          const dx = p.x - q.x, dy = p.y - q.y;
-          const dist = dx * dx + dy * dy;
-          if (dist < 13000) {
-            ctx.strokeStyle = "rgba(124,92,255," + (0.16 * (1 - dist / 13000)) + ")";
-            ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(frame);
-    }
-    size();
-    window.addEventListener("resize", size);
-    frame();
-  }
-
   /* ---- init ------------------------------------------------------------- */
   function init() {
     render();
@@ -458,9 +423,8 @@
     menu();
     theme();
     backToTop();
-    pointerFx();
+    videoModal();
     heroParallax();
-    particles();
   }
 
   if (document.readyState === "loading")
