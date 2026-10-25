@@ -3,7 +3,7 @@ const PORTFOLIO = {
   "profile": {
     "name": "Krishna Darak",
     "roles": [
-      "Digital Transformation & Business Analysis",
+      "Tech Consultant",
       "Engineering → Management",
       "Agile Program Delivery",
       "PGPM Candidate @ Great Lakes"
@@ -216,7 +216,7 @@ const PORTFOLIO = {
   ],
   "contact": {
     "heading": "Let's build something together",
-    "blurb": "Open to opportunities in digital transformation, business analysis, and agile program delivery, as well as product collaborations. Get in touch to start a conversation.",
+    "blurb": "Open to Tech Consultant roles and opportunities in digital transformation, business analysis, and agile program delivery. Get in touch to start a conversation.",
     "email": "krishna.darak53@gmail.com",
     "phone": "",
     "socials": [
