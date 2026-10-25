@@ -139,7 +139,7 @@
       card.dataset.delay = String(Math.min(i + 1, 4));
       const tags = (pr.tags || []).map((t) => "<span>" + esc(t) + "</span>").join("");
       const actions = [];
-      if (pr.link) actions.push('<a class="card__link" href="' + esc(pr.link) + '" target="_blank" rel="noopener">View project</a>');
+      if (pr.link) actions.push('<a class="card__link" href="' + esc(pr.link) + '" target="_blank" rel="noopener">' + esc(pr.linkLabel || "View project") + '</a>');
       if (pr.downloadUrl) actions.push('<a class="card__link" href="' + esc(pr.downloadUrl) + '" download>' + esc(pr.downloadLabel || "Download") + "</a>");
       if (pr.videoUrl) actions.push('<a class="card__link" href="' + esc(pr.videoUrl) + '" target="_blank" rel="noopener" data-video="' + esc(youtubeEmbedUrl(pr.videoUrl)) + '">Watch demo</a>');
       card.innerHTML =
@@ -159,9 +159,8 @@
       const node = el("div", "skill reveal");
       node.dataset.delay = String(Math.min(i + 1, 4));
       node.innerHTML =
-        '<div class="skill__top"><span>' + esc(s.name) + '</span>' +
-        '<span class="skill__pct">' + (s.level || 0) + "%</span></div>" +
-        '<div class="skill__track"><div class="skill__fill" data-level="' + (s.level || 0) + '"></div></div>';
+        '<div class="skill__top"><span>' + esc(s.name) + '</span></div>' +
+        (s.detail ? '<p class="item__detail">' + esc(s.detail) + '</p>' : '');
       wrap.appendChild(node);
     });
   }
