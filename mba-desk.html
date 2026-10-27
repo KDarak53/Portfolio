@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&display=swap" rel="stylesheet">
-<!-- BEFORE PUBLISHING: (1) edit the reconstructed prompts so they match what you actually asked Antigravity; (2) after running each test, replace "Not yet run" with the real result. Do not publish guessed results. -->
+<!-- BEFORE PUBLISHING: (1) edit prompts 2 to 10 so they match what you actually asked Antigravity; (2) after running each test, replace "Not yet run" with the real result. Do not publish guessed results. -->
 <style>
 :root{--bg:#f4f6f8;--surface:#fff;--ink:#14232b;--muted:#4d5f69;--line:#d3dbe0;--accent:#1f5fbf;--accent-ink:#fff;--fill:#fff0b3;--ok:#1d6b3a;--bad:#a12b2b}
 @media (prefers-color-scheme:dark){:root{--bg:#10181d;--surface:#17222a;--ink:#e8eef2;--muted:#9fb0ba;--line:#2c3b45;--accent:#6fa3ec;--accent-ink:#0b1318;--fill:#5a4a00;--ok:#6fcf93;--bad:#f08a8a}}
@@ -213,27 +213,88 @@ pre{white-space:pre-wrap;word-wrap:break-word;background:var(--bg);border:1px so
 <h2>Build evidence, prompts and overrides</h2>
 <p>MBA Desk was built with Antigravity, an AI coding environment, so there is no shared chat thread to link. The evidence is the commit history, the demo video, and the prompts below.</p>
 <p><a href="https://github.com/KDarak53/MBA-Desk-Desktop/commits/master">Commit history</a> · <a href="https://github.com/KDarak53/MBA-Desk-Desktop">Repository</a> · <a href="https://youtu.be/3lyZrkZxLj0">Demo video</a></p>
-<p class="note"><strong>Reconstructed prompts.</strong> These are written to reflect the decisions made during the build, in the order they were taken. They are not a verbatim log of the Antigravity session.</p>
+<p class="note"><strong>Prompts 1 and 11 are my actual CRISP prompts.</strong> Prompts 2 to 10 are reconstructed in CRISP form to reflect the decisions made during the build. They are not a verbatim log of the Antigravity session, and they are not in a claimed order.</p>
 <div class="prompts">
-<details><summary>Prompt 1: Write the contract before the code</summary><pre>I am building MBA Desk, a Windows desktop app (Electron, Vite, React, SQLite) for MBA students. It takes a text-based business newspaper PDF and returns a structured briefing. Before writing any code, write the behaviour contract. Never list first: never state a fact that is not in the source text; never give investment advice; never analyse non-business stories; never return more stories than the user's Top-N limit; never send text or keys anywhere except Gemini; never show output that failed validation; never guess when the PDF has no text layer. Then list intended, refusal and failure behaviour. Ask me questions if anything is ambiguous.</pre><p class="why">Use the never list as the test plan for everything that follows.</p></details>
-<details><summary>Prompt 2: Build the pipeline with a schema</summary><pre>Implement the pipeline: extract text from the PDF locally, split it into stories, send them to Gemini, and validate the response with a Zod schema. Fields: headline, page, summary, business impact, sector, functional tags from a fixed list, relevance 1 to 5, and 2 to 4 strategic-read bullets. Require four SWOT quadrants when relevance is 2 or higher. On schema failure retry once, then show an error and store nothing.</pre><p class="why">Validation is code, not a prompt request.</p></details>
-<details><summary>Prompt 3: Fix the voice of the output</summary><pre>The analysis reads like a narrator ("In a stunning move..."). Add a check that rejects those phrases.</pre><p class="why">Override: hard rejection produced false positives on legitimate wording. I replaced it with few-shot examples of the style I want, so voice is guidance and not a never rule.</p></details>
-<details><summary>Prompt 4: Cut cost by parsing locally</summary><pre>Stop uploading the PDF to Gemini. Extract the text locally and send only text, to remove the binary upload and image-token overhead. Show me the payload before and after.</pre><p class="why">Cost and privacy improved together, with a known limit: scanned PDFs are not supported.</p></details>
-<details><summary>Prompt 5: Fix the privacy leak</summary><pre>My API key and report history appeared on a second machine. Find out why. Move the database and settings into the user's AppData directory, and make sure the key is never logged or committed to the repository.</pre><p class="why">Override: I did not accept a fix in the project folder. Data and credentials belong to the user profile.</p></details>
-<details><summary>Prompt 6: Replace the dropdown with Top-N</summary><pre>The article-count dropdown returned too many minor stories on a 32-page paper. Replace it with a numeric Top-N input, rank stories by relevance, and enforce the limit in code rather than in the prompt.</pre><p class="why">Scope is controlled by the user and enforced deterministically.</p></details>
-<details><summary>Prompt 7: Address grounding concerns</summary><pre>Reduce unsupported claims. Lower the generation temperature, require every SWOT bullet to be traceable to the supplied text, and explain the architecture to me. State clearly that schema validation checks structure, not truth.</pre><p class="why">Override: I did not accept "validated" as meaning "true". Unsupported-claim rate is measured in test T1.</p></details>
-<details><summary>Prompt 8: Write adversarial tests</summary><pre>For each never-list item, write a test with an adversarial input: a sports and crime page, a "should I buy this stock?" prompt, a scanned PDF, malformed model output, and a network drop mid-run. State the expected behaviour for each before running it.</pre><p class="why">These become tests T1 to T8 in the test log.</p></details>
-<details><summary>Prompt 9: Package for Windows</summary><pre>Package the app as a Windows installer with Electron. Document the SmartScreen warning for an unsigned build and generate a SHA-256 checksum for the installer.</pre><p class="why">The app is delivered as a desktop application, not a hosted demo.</p></details>
+<details open><summary>Prompt 1: Opening brief for the page structure</summary><pre>- Positioning — target role and relevant experience.
+- Problem-framing memo — real problem, false problems, unknowns; one page without charts.
+- AI-worthiness and behaviour specification — never list first, followed by intended, refusal, and failure behaviour.
+- Prototype and evidence — installer, demo, screenshots, and behaviour checks.
+- CRISP build thread — public link showing your brief, decisions, and overrides.
+- Supporting documentation — your six requested sections, with a linked contents list and nine-page export limit</pre><p class="why">Self-assessment against CRISP: this is a list of six jobs with no Role, Specifics or Parameters. The Intent is not one job, so the later prompts split the work into one job each.</p></details>
+<details><summary>Prompt 2: Master brief, Job 1: the never list</summary><pre>C — Context:
+I am a product manager building MBA Desk, a Windows desktop app (Electron, Vite, React, SQLite via better-sqlite3) for MBA students, strategists and consultants. They read 20-40 pages of business newspapers (ET, Mint, FT, WSJ) each morning, and generic AI summaries only restate the article. Pipeline: pdf-parse extracts text locally, Google Gemini analyses it with the user's own API key, a Zod schema validates the JSON, results are stored in local SQLite. Per article: 7 functional tags (Finance, Operations, Marketing, HR, Product Management, Analytics, Consulting), a 1-5 relevance score, a four-quadrant SWOT for scores of 2 or more, and a strategic read. Use only these facts.
+
+R — Role:
+Act as a senior AI product manager who has shipped LLM features where errors are costly and who distrusts confident output that cannot be checked.
+
+I — Intent:
+Job 1: write the never list for this app. Nothing else.
+
+S — Specifics:
+Format: numbered list of 6 to 8 items, one sentence each, each testable. Audience: my professor and a product review panel. Must include: a fact-grounding rule, a no-advice rule, a data-boundary rule. Must exclude: style preferences.
+
+P — Parameters:
+- Do not invent facts, stats, names or citations.
+- Before you output anything, list your plan and wait for my go.
+- State your assumptions. Mark anything you are unsure about with [UNSURE].
+- Output shape: the list, then one line per item saying how it could be tested.</pre><p class="why">Context holds only facts I supplied. One job, plan first.</p></details>
+<details><summary>Prompt 3: Job 2: intended, refusal and failure behaviour</summary><pre>Job 2: using the never list we agreed, write the intended, refusal and failure behaviour for MBA Desk as a three-part table. Under 250 words. Audience: product review panel. Must cover: a non-business page, an investment-advice request, a scanned PDF with no text layer, malformed model output, a network failure. Keep the never list unchanged. Do not invent facts.</pre><p class="why">One job, built on the agreed never list.</p></details>
+<details><summary>Prompt 4: Job 3: the output schema</summary><pre>Job 3: define the Zod schema for one analysed article. Fields: headline, page, summary, business impact, sector, functional tags from the seven allowed, relevance 1 to 5, strategic read, and four SWOT quadrants required only when relevance is 2 or higher. Show the schema only, no app code. On validation failure the app retries once, then stores nothing. Do not invent fields.</pre><p class="why">Validation is enforced in code, not requested in a prompt.</p></details>
+<details><summary>Prompt 5: Job 4: Top-N</summary><pre>Job 4: replace the fixed article-count dropdown with a numeric Top-N input. Context: a 32-page paper returned too many minor stories. Rank stories by relevance and enforce the limit in code, not in the prompt. Keep everything else unchanged.</pre><p class="why">Scope is controlled by the user and enforced deterministically.</p></details>
+<details><summary>Prompt 6: Job 5: parse locally</summary><pre>Job 5: stop uploading the PDF to Gemini. Extract the text locally and send text only. Show payload size before and after, using only numbers we measure. If a number is missing, write TBD. Keep everything else unchanged.</pre><p class="why">Cost and privacy improve together. Known limit: scanned PDFs are not supported.</p></details>
+<details><summary>Prompt 7: Override: privacy, fixed in the brief</summary><pre>You got this wrong: my API key and report history appeared on a second machine. Update the brief: add to Context "Settings and the database live in the user's AppData directory, never in the project folder", and add to Parameters "The key is never logged or committed." Then regenerate only the storage code that depended on it. Do not patch the old path; rewrite from the corrected brief.</pre><p class="why">The fix goes into the brief, then the output is regenerated.</p></details>
+<details><summary>Prompt 8: Override: voice, fixed in the brief</summary><pre>You got this wrong: the analysis reads like a narrator, and the hard rejection filter blocked legitimate sentences. Update the brief: remove the hard filter from Parameters. Add to Specifics one WRONG and one RIGHT example of the voice I want, and "Must exclude: narrator phrases such as 'this article' and 'highlights'." Then regenerate only the analysis prompt. Do not hand-edit the old one.</pre><p class="why">Voice is guidance with examples, not a never rule.</p></details>
+<details><summary>Prompt 9: Override: grounding, fixed in the brief</summary><pre>You got this wrong: some SWOT bullets contain claims that are not in the article. Update the brief: add to Parameters "Every SWOT bullet must be traceable to the supplied text; otherwise write unknown." Schema validation checks structure, not truth, so do not describe it as a fact check. Then regenerate only the SWOT section.</pre><p class="why">Unsupported-claim rate is measured in test T1, not assumed.</p></details>
+<details><summary>Prompt 10: Job 9: adversarial test plan</summary><pre>Job 9: write a test plan with one adversarial input per never-list item: a sports and crime page, a "should I buy this stock?" prompt, a scanned PDF, malformed model output, a network drop mid-run. Give the expected behaviour only. I will run the tests and record results myself. Do not state results.</pre><p class="why">These become tests T1 to T8 in the test log.</p></details>
+<details><summary>Prompt 11: Documentation brief</summary><pre>ROLE
+Act as a senior product manager and technical writer documenting an AI product for an academic and business audience. Your tone is precise and confident, and you never write promotional filler.
+
+INCLUSIVE OF CONTEXT
+- MBA Desk is an offline-first Windows desktop app (Electron + Vite + React, SQLite via better-sqlite3).
+- It turns daily business newspaper PDFs (ET, Mint, FT, WSJ) into MBA-grade briefings for MBA students, strategists and consultants.
+- Problem: reading 20-40 pages of newspapers each morning takes too long, and generic AI summaries only restate what the article says.
+- Pipeline: pdf-parse extracts text locally, then Google Gemini analyses it (the Gemini API key stays on the user's machine), a Zod schema validates the JSON output, and results are stored in local SQLite.
+- Analysis per article: 7 functional tags (Finance, Operations, Marketing, HR, Product Management, Analytics, Consulting), a 1-5 relevance score, a 4-quadrant SWOT (for score &gt;= 2), and a strategic_read in the form "Because [Company] faces [Weakness/Threat], they must [Action], otherwise [Competitor] captures [Market]".
+- Voice rules ban phrases like "this article" and "highlights".
+- Iteration history: Next.js web prototype, then banned phrases, then MBA specialization and SWOT, then local parsing and token optimization.
+- Facts you can use: ~5,160 input tokens saved on a 20-page paper (258 image tokens/page), a 20-40% reduction in billable tokens, and an upload payload that dropped from ~10 MB to ~50 KB.
+- Inputs I will paste below: [system prompt], [user prompt], [chat/ commit history], [benchmark logs]. Use only these and do not invent numbers. Write "TBD" for anything missing.
+
+SPECIFIC ABOUT OUTPUT
+- Format: Markdown, ready to export to PDF. Header block: Document Version 1.0, Project, Repository, Last Updated (October 2026).
+- Add a linked Table of Contents, then exactly these sections:
+1. Executive Summary (max 150 words)
+2. What the Application Does (Core Problem &amp; Solution, 8 Key Features, Business &amp; Academic Value)
+3. System Architecture &amp; Data Flow (components table, end-to-end workflow, Zod anti-hallucination guardrails)
+4. Prompt Engineering &amp; History (4 evolution phases, each with Objective / Limitations / Outcome; the current system and user prompts in code blocks; voice rules with one WRONG/RIGHT example)
+5. Product Evolution &amp; User Journey Log (a table with the columns Milestone | Problem or User Request | Solution Implemented)
+6. Performance &amp; Cost Optimization (a before/after table)
+- Keep it to 9 pages. Use short paragraphs and bullets, and bold the key terms.
+
+PRESCRIPTIVE ABOUT PROCESS
+1. First list any gaps or ambiguities in my inputs and ask me to confirm. Do not guess.
+2. Then outline the document and wait for my "go".
+3. Write it section by section, quoting the production prompts verbatim and never paraphrasing them.
+4. Before finishing, check that every number matches my inputs and that no banned voice phrases appear anywhere in the document.</pre><p class="why">Self-assessment against CRISP: Context, Role, Specifics and Parameters are present (no invented numbers, plan first, wait for go). The Intent is not one job, because it asks for six sections in one prompt. The process rule works around this by writing section by section.</p></details>
 </div>
+<h3>CRISP self-check</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Prompt</th><th>Context</th><th>Role</th><th>Intent (one job)</th><th>Specifics</th><th>Parameters</th></tr></thead>
+<tbody>
+<tr><td>1 (actual)</td><td>No</td><td>No</td><td>No: six jobs</td><td>No</td><td>No</td></tr>
+<tr><td>2 to 10 (reconstructed)</td><td>Master brief, then inherited</td><td>Master brief</td><td>Yes: one job each</td><td>Yes</td><td>Yes: plan first, no invention</td></tr>
+<tr><td>11 (actual)</td><td>Yes</td><td>Yes</td><td>No: six sections</td><td>Yes</td><td>Yes</td></tr>
+</tbody></table></div>
 <h3>Decisions and overrides, summarised</h3>
 <div class="tablewrap"><table>
 <thead><tr><th>Moment</th><th>Decision and override</th><th>Prompt</th></tr></thead>
 <tbody>
-<tr><td>Voice</td><td>Relaxed hard rejection of narrator-style phrases after false positives; moved to few-shot guidance</td><td>3</td></tr>
-<tr><td>Cost</td><td>Parsed PDFs locally to remove binary uploads and image-token overhead</td><td>4</td></tr>
-<tr><td>Privacy</td><td>Credentials and history appeared on a second machine, so database and settings moved to the user’s AppData folder</td><td>5</td></tr>
-<tr><td>Scope</td><td>Numeric Top-N replaced a fixed dropdown after a 32-page paper produced too many minor stories</td><td>6</td></tr>
-<tr><td>Trust</td><td>Added schema validation and low-temperature generation. Neither proves factual accuracy, hence the N1 measurement</td><td>7</td></tr>
+<tr><td>Voice</td><td>Relaxed hard rejection of narrator-style phrases after false positives; moved to few-shot guidance</td><td>8</td></tr>
+<tr><td>Cost</td><td>Parsed PDFs locally to remove binary uploads and image-token overhead</td><td>6</td></tr>
+<tr><td>Privacy</td><td>Credentials and history appeared on a second machine, so database and settings moved to the user’s AppData folder</td><td>7</td></tr>
+<tr><td>Scope</td><td>Numeric Top-N replaced a fixed dropdown after a 32-page paper produced too many minor stories</td><td>5</td></tr>
+<tr><td>Trust</td><td>Added schema validation and low-temperature generation. Neither proves factual accuracy, hence the N1 measurement</td><td>9</td></tr>
+<tr><td>Documentation</td><td>Wrote the six-section documentation from the build record, with no invented numbers and “TBD” for anything missing</td><td>11</td></tr>
 </tbody></table></div>
 <p>Documentation: <a href="mba-desk-documentation.md">architecture and prompt history (Markdown)</a>. Only claims backed by the repository, the demo video or the test log appear on this page.</p>
 </section>
