@@ -75,6 +75,9 @@
     ];
     const wrap = $("#navLinks");
     if (!wrap) return;
+    const assignment = el("a", null, "AI PM Assignment ↗");
+    assignment.href = "mba-desk.html";
+    wrap.appendChild(assignment);
     map.forEach(([id, label]) => {
       if (!document.getElementById(id)) return;
       const a = el("a", null, label);
