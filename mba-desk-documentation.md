@@ -21,7 +21,7 @@ MBA Desk is an **offline-first Windows desktop application** that turns business
 
 The supplied architecture uses Electron, Vite, React, local PDF parsing, Gemini analysis, Zod validation, and SQLite storage. Outputs include functional tags, relevance scores, SWOT, and strategic interpretation. Local parsing and storage work on the user’s device; **AI analysis requires connectivity** and sends extracted text to Google.
 
-The companion website offers a **synthetic behaviour simulation**, not a live AI model. Reported efficiency improvements remain unverified against benchmark logs. Production prompts, factual-grounding evaluation, and desktop compliance evidence are TBD.
+The **Windows desktop installer is available** from the [GitHub downloads folder](https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads), alongside a [desktop walkthrough](https://youtu.be/3lyZrkZxLj0). Reported efficiency improvements remain unverified against benchmark logs. Production prompts, factual-grounding evaluation, and desktop compliance evidence are TBD.
 
 ## 2. What the Application Does
 
@@ -70,7 +70,7 @@ Readers face **20–40 pages** of daily business news. Their task is to decide w
 
 ### Zod Anti-Hallucination Guardrails
 
-Schema constraints can reject missing fields, invalid types, disallowed tags, or out-of-range scores. They reduce malformed output, **not semantic hallucination**. Source-grounding checks and expert evaluation are still needed. The browser simulation uses a small JavaScript checker rather than the production Zod schema and must not be treated as equivalent.
+Schema constraints can reject missing fields, invalid types, disallowed tags, or out-of-range scores. They reduce malformed output, **not semantic hallucination**. Source-grounding checks and expert evaluation are still needed.
 
 ## 4. Prompt Engineering & History
 
