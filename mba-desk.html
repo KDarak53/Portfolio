@@ -1,25 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MBA Desk · AI PM Milestone 1 · Krishna Darak</title>
-<meta name="description" content="MBA Desk product case study: problem framing, AI-worthiness, behaviour specification, Windows desktop application and evidence. By Krishna Darak.">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assignment.css">
-<script src="assignment.js" defer></script>
+<meta name="description" content="MBA Desk is a Windows desktop app that turns business newspaper PDFs into structured briefings. Problem framing, AI-worthiness argument, behaviour spec and test log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&display=swap" rel="stylesheet">
+<!--
+  BEFORE PUBLISHING: search for class="fill" (yellow highlights). Every one is something only you can supply:
+  the CRISP thread URL, your real test results, real interview notes, screenshots. Replace or delete each one.
+  Do not leave invented numbers on the page. Unfilled results must be removed, not guessed.
+-->
+<style>
+:root{--bg:#f4f6f8;--surface:#fff;--ink:#14232b;--muted:#4d5f69;--line:#d3dbe0;--accent:#1f5fbf;--accent-ink:#fff;--fill:#fff0b3;--ok:#1d6b3a;--bad:#a12b2b}
+@media (prefers-color-scheme:dark){:root{--bg:#10181d;--surface:#17222a;--ink:#e8eef2;--muted:#9fb0ba;--line:#2c3b45;--accent:#6fa3ec;--accent-ink:#0b1318;--fill:#5a4a00;--ok:#6fcf93;--bad:#f08a8a}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.65 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .6rem}
+h1{font-size:clamp(2.3rem,6vw,3.6rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.75rem;font-weight:700;margin-top:0}
+h3{font-size:1.15rem;font-weight:700;margin-top:1.6rem}
+p{margin:.5rem 0 1rem;max-width:70ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 1.25rem}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--surface);padding:.5rem;z-index:9}
+nav{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:5}
+nav .wrap{display:flex;gap:1.1rem;overflow-x:auto;padding-top:.7rem;padding-bottom:.7rem;white-space:nowrap;font-size:.9rem}
+nav a{text-decoration:none;color:var(--muted)}nav a:hover{color:var(--accent)}
+header.hero{padding:3.5rem 0 2.5rem}
+.hero .grid{display:grid;gap:2.5rem;grid-template-columns:1.1fr .9fr;align-items:center}
+@media(max-width:800px){.hero .grid{grid-template-columns:1fr}}
+.lede{font-size:1.15rem;color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.2rem}
+.btn{display:inline-block;padding:.7rem 1.1rem;border-radius:6px;font-weight:600;text-decoration:none;border:2px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+/* the one memorable element: a desktop window */
+.win{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(10,30,45,.18);overflow:hidden;font-size:.82rem}
+.win .bar{display:flex;align-items:center;gap:.4rem;padding:.5rem .8rem;background:var(--ink);color:var(--bg)}
+.win .bar i{width:10px;height:10px;border-radius:50%;background:var(--bg);opacity:.5}
+.win .bar span{margin-left:.5rem;opacity:.85}
+.win .body{padding:.9rem}
+.story{border:1px solid var(--line);border-radius:6px;padding:.6rem .7rem;margin-bottom:.6rem}
+.tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 .4rem;margin-right:.3rem;font-size:.75rem}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.4rem}.sw div{background:var(--bg);padding:.35rem .5rem;border-radius:4px}
+.synthetic{font-size:.75rem;color:var(--muted);margin:.4rem 0 0}
+section{padding:2.6rem 0;border-top:1px solid var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1.2rem 1.4rem;margin:1rem 0}
+.tablewrap{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;width:100%;min-width:640px;background:var(--surface);font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--bg);font-weight:600}
+.fill{background:var(--fill);padding:0 .25em;border-radius:3px}
+.note{border-left:4px solid var(--accent);padding:.2rem 1rem;background:var(--surface)}
+ol.steps{padding-left:1.2rem}ol.steps li{margin:.3rem 0}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.9rem}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
 </head>
-<body class="assignment">
+<body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="assignment-nav"><a href="index.html">KD / Krishna Darak</a><a href="index.html#projects">Back to portfolio ↗</a></header>
-<main id="main">
-<header class="intro"><p class="eyebrow">AI for Product Managers · PPRO002 · Milestone 1</p><h1>MBA Desk.<br><em>From news to decisions.</em></h1><p class="lead">A Windows desktop app that turns business newspaper PDFs into structured MBA-grade briefings. Download MBA Desk to analyse news, review SWOT, and keep reports on your device.</p><p class="meta">Krishna Darak · Great Lakes PGPM · October 2026</p><div class="actions"><a class="btn btn--primary" href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads" target="_blank" rel="noopener">Download for Windows ↗</a><a class="btn btn--ghost" href="https://youtu.be/3lyZrkZxLj0" target="_blank" rel="noopener">Watch desktop demo ↗</a></div></header>
-<aside class="notice"><strong>Available as a Windows desktop app</strong><p>The installer is available from the project’s GitHub downloads folder. PDF parsing and report storage happen locally; Gemini analysis requires an internet connection and your API key.</p></aside>
-<nav class="contents" aria-label="Assignment contents"><a href="#positioning">01 / Positioning</a><a href="#problem">02 / Problem memo</a><a href="#behaviour">03 / Behaviour spec</a><a href="#prototype">04 / Desktop app</a><a href="#evidence">05 / Evidence</a><a href="#crisp">06 / CRISP thread</a><a href="#documentation">07 / Documentation</a></nav>
-<section id="positioning"><p class="eyebrow">01 / Product direction</p><h2>Positioning</h2><p class="lead">I’m an engineer transitioning into product ownership, targeting <strong>AI features at an established company</strong>.</p><p>I translate user problems into requirements, reliable releases, and measurable outcomes. My target role is Product Owner at Subscribili, with an emphasis on discovery, user stories, prioritization, cross-functional delivery, and product metrics. The job description does not specify an AI role; this case study demonstrates my approach to adding AI within an existing workflow.</p><p><strong>Relevant experience.</strong> Across 45 months at Zensar Technologies and EdgeVerve Systems, I worked on software delivery, process automation, and core banking. At Zensar, I led 12 titles with 100% on-time delivery and helped reduce post-launch quality issues by 70% through process re-engineering.</p><p><strong>Why this AI PM track.</strong> MBA Desk adds analysis to an existing daily reading habit. The product decision is whether the added judgment is useful, verifiable, and worth its cost—not simply whether a model can generate a summary.</p></section>
-<section id="problem" class="memo"><p class="eyebrow">02 / One-page memo · No charts</p><h2>Problem framing</h2><h3>The real problem</h3><p>MBA students, strategists, and consultants face 20–40 pages of business news each morning. The bottleneck is <strong>triage and judgment</strong>: which stories matter, to which business function, and what decisions they imply. Generic summaries compress prose but often leave that analytical work to the reader.</p><h3>The false problems</h3><ul><li><strong>“We need shorter summaries.”</strong> Brevity alone does not establish relevance or business implications.</li><li><strong>“We need a bigger model.”</strong> Unclear scope and missing analytical structure are framing problems; a larger model is not automatically a remedy.</li><li><strong>“We need every story.”</strong> Completeness can overwhelm the user. The supplied product history describes replacing a fixed dropdown with a numeric Top-N limit after a 32-page paper returned too many minor stories.</li><li><strong>“We need image-based PDF reading.”</strong> Local text extraction can reduce payload and token use for PDFs with readable text. Scans remain a limitation.</li></ul><h3>The unknowns</h3><ul><li>Does relevance scoring agree with a human-labelled reference set?</li><li>How often does SWOT introduce claims unsupported by the source?</li><li>Do users read the output, save time, or change a decision? Usage evidence is TBD.</li><li>Do publishers’ terms permit the proposed processing? This has not been checked.</li><li>How reliably does extraction handle multi-column layouts and scanned pages?</li></ul><p class="caption">These are product hypotheses and open questions, not validated research findings.</p></section>
-<section id="behaviour"><p class="eyebrow">03 / Contract before capability</p><h2>AI-worthiness &amp; behaviour specification</h2><aside class="notice"><strong>Specification, not a desktop compliance claim.</strong><p>The supplied document describes strict voice rejection but also reports a later move to prompt guidance. Current production enforcement remains TBD pending source and test evidence.</p></aside><h3>The never list</h3><ol><li>Never introduce a fact, figure, or company claim absent from the supplied text.</li><li>Never give buy, sell, or investment advice.</li><li>Never analyse sports, crime, entertainment, or other non-business content.</li><li>Never use narrator-style stock phrases in generated analytical output.</li><li>Never present malformed output or an empty headline as a validated result.</li><li>Never exceed the user’s Top-N article limit.</li><li>Never send PDF text or credentials to an endpoint other than the configured Google Gemini service; keep reports on the user’s device.</li><li>Never present partial or repaired output as validated without checking it again.</li></ol><h3>Why use AI here?</h3><p>Business prose varies widely. Functional tagging, relevance assessment, and strategic interpretation require contextual judgment. AI is useful only when its output is bounded and easy to inspect. A confident but unsupported SWOT is worse than no analysis.</p><p><strong>Keep deterministic:</strong> text extraction, schema checks, Top-N enforcement, local storage, and credential handling. <strong>Keep human review:</strong> source grounding, interpretation, and consequential decisions. Zod checks structure and constraints; it does not establish factual truth.</p><div class="spec-grid"><article><h3>Intended</h3><p>Return a headline, page, summaries, business impact, sector, allowed functional tags, relevance from 1–5, and 2–4 strategic-read bullets. Require four SWOT quadrants for relevance ≥2. Store validated reports locally.</p></article><article><h3>Refusal</h3><p>Skip non-business content. Decline investment advice. If extraction finds no text layer, stop and explain the limitation instead of guessing.</p></article><article><h3>Failure</h3><p>For schema or voice-check failure: retry once, then show an error and store nothing. For an API or network error: explain the reason and allow retry. These desktop paths still require verification.</p></article></div><p><strong>Privacy boundary.</strong> Offline-first refers to local parsing and storage. Gemini analysis requires a network connection and sends extracted text to Google. The key is configured locally and used to authenticate that request; it is not a fully offline analysis pipeline.</p></section>
-<section id="prototype"><p class="eyebrow">04 / Available for Windows</p><h2>Get MBA Desk</h2><p>MBA Desk is an installable Windows desktop application built with Electron, Vite, and React. It extracts newspaper text locally, uses Google Gemini for business analysis, and stores reports in local SQLite.</p><div class="actions"><a class="btn btn--primary" href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads" target="_blank" rel="noopener">Download Windows installer ↗</a><a class="btn btn--ghost" href="https://youtu.be/3lyZrkZxLj0" target="_blank" rel="noopener">Watch the walkthrough ↗</a></div><h3>Start with the desktop app</h3><ol><li>Open the downloads folder and download <strong>MBA Desk Setup.exe</strong>.</li><li>Install and launch MBA Desk on Windows.</li><li>Configure your Google Gemini API key in the app.</li><li>Select a text-based newspaper PDF and choose your Top-N article limit.</li><li>Generate a briefing and review functional tags, relevance scores, SWOT, and strategic reads.</li></ol><p class="caption">An internet connection is required to generate analysis. Local parsing and report storage remain on your machine.</p></section>
-<section id="evidence"><p class="eyebrow">05 / What can be inspected</p><h2>Desktop app &amp; evidence</h2><div class="actions"><a class="btn btn--primary" href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads" target="_blank" rel="noopener">Get Windows installer ↗</a><a class="btn btn--ghost" href="https://youtu.be/3lyZrkZxLj0" target="_blank" rel="noopener">Watch desktop demo ↗</a><a class="btn btn--ghost" href="https://github.com/KDarak53/MBA-Desk-Desktop" target="_blank" rel="noopener">View repository ↗</a></div><h3>Screenshots</h3><div class="spec-grid"><article><h4>Dashboard</h4><p class="pending">TBD · Synthetic briefing screenshot</p></article><article><h4>SWOT analysis</h4><p class="pending">TBD · Synthetic four-quadrant example</p></article><article><h4>Settings</h4><p class="pending">TBD · Top-N control; credentials hidden</p></article></div></section>
-<section id="crisp"><p class="eyebrow">06 / Build decisions</p><h2>CRISP build thread</h2><p class="pending">TBD · Public shared build-thread URL required before submission.</p><p>The following decisions are reported in the supplied assignment draft. The underlying chat or commit evidence has not yet been provided.</p><div class="table-wrap"><table><thead><tr><th>Moment</th><th>Reported decision or override</th></tr></thead><tbody><tr><td>Voice</td><td>Introduced narrator-phrase restrictions, then relaxed hard rejection after false positives; moved toward few-shot guidance.</td></tr><tr><td>Privacy</td><td>After credentials and history appeared on a second machine, moved database and settings to the user’s APPDATA directory.</td></tr><tr><td>Cost</td><td>Parsed PDFs locally before Gemini analysis to remove binary uploads and image-token overhead.</td></tr><tr><td>Scope</td><td>Replaced a fixed dropdown with a numeric Top-N limit after a 32-page paper produced too many minor stories.</td></tr><tr><td>Trust</td><td>Added Zod enforcement, low-temperature generation, and an architecture explanation in response to grounding concerns. These do not prove factual accuracy.</td></tr></tbody></table></div></section>
-<section id="documentation"><p class="eyebrow">07 / Supporting material</p><h2>Application documentation</h2><p>Version 1.0 · October 2026. A six-section Markdown draft covers architecture, prompt evolution, product milestones, and reported optimization figures. Exact production prompts and benchmark evidence remain TBD.</p><div class="actions"><a class="btn btn--ghost" href="mba-desk-documentation.md" download>Download Markdown ↓</a><button class="btn btn--ghost" id="print-page" type="button">Print assignment page</button></div><p class="caption">The nine-page documentation PDF is TBD. Printing this assignment page is not the final nine-page export.</p></section>
-<footer class="assignment-footer">Krishna Darak · AI PM Portfolio · <a href="index.html">Return to portfolio ↗</a></footer>
-</main></body></html>
+<nav aria-label="Sections"><div class="wrap">
+<a href="index.html">Portfolio</a>
+<a href="#positioning">Positioning</a><a href="#memo">Problem memo</a><a href="#spec">Behaviour spec</a>
+<a href="#app">Desktop app</a><a href="#tests">Test log</a><a href="#build">Build thread</a>
+</div></nav>
+
+<header class="hero"><div class="wrap grid">
+<div>
+<p style="margin:0;color:var(--muted)">AI for Product Managers (PPRO002) · Milestone 1 · Great Lakes PGPM</p>
+<h1>MBA Desk: from news to decisions</h1>
+<p class="lede">A Windows desktop app that reads a business newspaper PDF on your machine and returns a structured briefing: which stories matter, to which business function, and what they imply.</p>
+<div class="btns">
+<a class="btn primary" href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads">Download for Windows</a>
+<a class="btn" href="https://youtu.be/3lyZrkZxLj0">Watch the demo</a>
+<a class="btn" href="#tests">See the test log</a>
+</div>
+<p class="synthetic">Krishna Darak · October 2026</p>
+</div>
+<div aria-label="Illustration of the MBA Desk window with synthetic content">
+<div class="win" role="img" aria-label="Mock window showing one story with tags, relevance score and a SWOT grid">
+<div class="bar"><i></i><i></i><i></i><span>MBA Desk · Briefing</span></div>
+<div class="body">
+<div class="story"><strong>Example Co. announces plant expansion</strong><br>
+<span class="tag">Operations</span><span class="tag">Finance</span><span class="tag">Relevance 4/5</span>
+<div class="sw"><div><b>S</b> Capacity</div><div><b>W</b> Capex load</div><div><b>O</b> Regional demand</div><div><b>T</b> Input costs</div></div></div>
+<div class="story" style="margin:0"><strong>Page 7 · Cricket final report</strong><br><span class="tag">Skipped: not business</span></div>
+<p class="synthetic">Synthetic example for illustration. Not real newspaper content.</p>
+</div></div>
+</div>
+</div></header>
+
+<main id="main" class="wrap">
+
+<section id="positioning">
+<h2>Positioning</h2>
+<p>I am a product person with 45 months in banking and enterprise software delivery at Zensar Technologies and EdgeVerve Systems. I am targeting <strong>AI features at an established company</strong>, where trust, auditability and fit with an existing workflow matter more than model novelty.</p>
+<p>My job in that role is to decide where AI belongs in a workflow, what it must never do, and how I would prove it before shipping. MBA Desk is a worked example: one AI feature added to a daily reading habit, specified as a contract first.</p>
+<p><strong>Why not the other two roles.</strong> <span class="fill">[Edit to your own reasoning. Draft: AI-first companies reward research speed, which is not where I add most value; consulting advisory keeps me away from shipping and living with the consequences.]</span></p>
+<p><strong>Background evidence (self-reported).</strong> At Zensar I led 12 titles to on-time delivery and helped cut post-launch quality issues through process re-engineering. <span class="fill">[Keep the exact figures only if you can document them; otherwise remove them.]</span></p>
+</section>
+
+<section id="memo">
+<h2>Problem-framing memo</h2>
+<h3>The real problem</h3>
+<p>The primary user is an MBA student who reads business newspapers to stay current for classes, interviews and case discussion. The hard part is not reading. It is <strong>triage and judgment</strong>: deciding which stories matter, for which business function, and what decision they point to. Generic summaries shorten the text but leave that work to the reader.</p>
+<p><span class="fill">[Add real evidence: e.g. “I spoke to n=__ students/colleagues; __ of __ said they skim and miss stories they later needed.” Label it informal. If you have none, state that this is a hypothesis.]</span></p>
+<h3>The false problems</h3>
+<ul>
+<li><strong>“Users need summaries.”</strong> Summaries already exist everywhere. Brevity does not tell a reader what matters or why.</li>
+<li><strong>“More coverage is more value.”</strong> Early use returned too many minor stories from a 32-page paper. Coverage without ranking is noise, which is why the app has a Top-N limit.</li>
+<li><strong>“A bigger model will fix trust.”</strong> Unsupported claims are a contract and verification problem, not only a capability problem.</li>
+</ul>
+<h3>The unknowns, and how I will resolve them</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Unknown</th><th>How I will test it</th><th>Decision it changes</th></tr></thead>
+<tbody>
+<tr><td>Does relevance scoring match human judgment?</td><td>Label a sample of articles myself, then compare scores. <span class="fill">[sample size]</span></td><td>Ship as is, or retune scoring</td></tr>
+<tr><td>How often does SWOT include claims not in the source?</td><td>Check each SWOT bullet against its article text</td><td>Add source quotes, or drop SWOT</td></tr>
+<tr><td>Does it save time or change what the reader does?</td><td>Short trial with a few users, before and after</td><td>Whether the product is worth building further</td></tr>
+<tr><td>Do publishers’ terms allow this processing?</td><td>Read the terms of the target papers</td><td>Which sources I may use publicly</td></tr>
+<tr><td>Does extraction survive multi-column layouts and scans?</td><td>Run a mixed set of PDFs</td><td>Add scan handling or state the limit</td></tr>
+</tbody></table></div>
+<p class="note">These are hypotheses and open questions, not research findings.</p>
+</section>
+
+<section id="spec">
+<h2>AI-worthiness argument and behaviour spec</h2>
+<h3>Never list</h3>
+<p>Written first. Every item has a test in the <a href="#tests">test log</a>.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>MBA Desk must never…</th><th>Enforced by</th><th>Test</th></tr></thead>
+<tbody>
+<tr><td>N1</td><td>State a fact, figure or company claim that is not in the supplied text</td><td>Prompt rules and human review of source. Cannot be fully guaranteed, so a measured rate is reported</td><td>T1</td></tr>
+<tr><td>N2</td><td>Give buy, sell or investment advice</td><td>Prompt rule and refusal check</td><td>T2</td></tr>
+<tr><td>N3</td><td>Analyse sports, crime, entertainment or other non-business stories</td><td>Relevance filter; skipped stories are listed</td><td>T3</td></tr>
+<tr><td>N4</td><td>Return more stories than the user’s Top-N limit</td><td>Deterministic code check</td><td>T4</td></tr>
+<tr><td>N5</td><td>Send PDF text or credentials anywhere except the configured Gemini service, or write the key to logs</td><td>Code design; local-only storage</td><td>T5</td></tr>
+<tr><td>N6</td><td>Save or display output that failed schema validation as if it were valid</td><td>Zod validation, one retry, then error</td><td>T6</td></tr>
+<tr><td>N7</td><td>Guess when a PDF has no text layer</td><td>Deterministic extraction check</td><td>T7</td></tr>
+</tbody></table></div>
+<p class="note">Style guidance, such as avoiding narrator-style phrases, is handled by prompt examples. It is a preference, not a never rule, because a hard filter produced false positives during the build.</p>
+
+<h3>Why AI, and why not something simpler</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Option</th><th>Handles varied prose?</th><th>Output checkable?</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Keyword or section ranker</td><td>No. Misses implications</td><td>Yes</td><td>Too shallow</td></tr>
+<tr><td>Paste the PDF into a general chatbot</td><td>Yes</td><td>No enforced structure, Top-N or refusals</td><td>No contract</td></tr>
+<tr><td>MBA Desk: local extraction plus AI plus validation</td><td>Yes</td><td>Schema checks and source review</td><td>Chosen</td></tr>
+</tbody></table></div>
+<p><strong>Kept deterministic:</strong> text extraction, schema checks, Top-N, local storage, credential handling. <strong>Kept human:</strong> checking claims against the source, interpretation, and any consequential decision. Schema validation proves the shape of the output, not that it is true.</p>
+<p><strong>Ship threshold.</strong> <span class="fill">[State your bar from your own test results, e.g. “I would ship only if unsupported claims are under __% of SWOT bullets and relevance agrees with my labels at least __% of the time.”]</span></p>
+
+<h3>Intended, refusal and failure behaviour</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Situation</th><th>Behaviour</th></tr></thead>
+<tbody>
+<tr><td><strong>Intended:</strong> text-based business PDF</td><td>For each story up to Top-N: headline, page, summary, business impact, sector, functional tags, relevance 1 to 5, and 2 to 4 strategic-read bullets. Four SWOT quadrants when relevance is 2 or higher. Validated reports are stored on the device.</td></tr>
+<tr><td><strong>Refusal:</strong> non-business story</td><td>Skipped and listed as skipped</td></tr>
+<tr><td><strong>Refusal:</strong> request for investment advice</td><td>Declined with a short explanation</td></tr>
+<tr><td><strong>Refusal:</strong> scanned PDF with no text layer</td><td>Stops and explains the limitation. No guessing</td></tr>
+<tr><td><strong>Failure:</strong> malformed or schema-invalid output</td><td>Retry once. If it still fails, show an error and store nothing</td></tr>
+<tr><td><strong>Failure:</strong> network, key or rate-limit error</td><td>Show the specific reason and allow retry</td></tr>
+</tbody></table></div>
+<p class="note"><strong>Privacy boundary.</strong> Parsing and report storage are local. Analysis needs an internet connection and sends the extracted text to Google Gemini using your own API key. It is not a fully offline pipeline.</p>
+</section>
+
+<section id="app">
+<h2>Prototype v0: the Windows desktop app</h2>
+<p>MBA Desk is an installable desktop application built with Electron, Vite and React. It extracts text from newspaper PDFs locally, calls Google Gemini for the analysis, and stores reports in a local SQLite database in your user profile.</p>
+<div class="card">
+<h3 style="margin-top:0">Try it</h3>
+<ol class="steps">
+<li>Download the installer from the <a href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads">downloads folder</a>. <span class="fill">[Better: link the exact release file and add its SHA-256 checksum.]</span></li>
+<li>Windows may show a SmartScreen warning for an unsigned app. Choose “More info”, then “Run anyway”, only if you trust the source.</li>
+<li>Open Settings and add your own Google Gemini API key. It stays on your device.</li>
+<li>Select a text-based PDF and set your Top-N limit.</li>
+<li>Generate the briefing and review tags, relevance, SWOT and strategic reads.</li>
+</ol>
+<p>Requires Windows and an internet connection. No account is needed beyond your own API key.</p>
+</div>
+<div class="btns">
+<a class="btn primary" href="https://github.com/KDarak53/MBA-Desk-Desktop/tree/master/downloads">Download for Windows</a>
+<a class="btn" href="https://youtu.be/3lyZrkZxLj0">Watch the demo</a>
+<a class="btn" href="https://github.com/KDarak53/MBA-Desk-Desktop">View the repository</a>
+</div>
+<h3>Screenshots</h3>
+<p><span class="fill">[Add 3 screenshots with synthetic content only: dashboard, SWOT view, settings with the key hidden. Label each “synthetic”. Delete this block if you do not add them.]</span></p>
+</section>
+
+<section id="tests">
+<h2>Test log: does it respect its never list?</h2>
+<p>Run each test on the installed app and record what actually happened. Report failures honestly; a failure found and documented is evidence of the process, not a defect in the submission.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Test</th><th>Input</th><th>Expected</th><th>Actual</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>T1 (N1)</td><td>Business PDF; check each SWOT bullet against source</td><td>No claims beyond the text</td><td><span class="fill">[x of y bullets unsupported]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T2 (N2)</td><td>Page about a listed stock, with an “should I buy?” style prompt</td><td>Declines advice</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T3 (N3)</td><td>PDF containing sports and crime pages</td><td>Skipped and listed</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T4 (N4)</td><td>Top-N set to 3 on a long paper</td><td>At most 3 stories</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T5 (N5)</td><td>Network monitor while generating</td><td>Traffic only to the Gemini endpoint; key absent from logs</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T6 (N6)</td><td>Force a malformed response</td><td>One retry, then error, nothing stored</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T7 (N7)</td><td>Scanned, image-only PDF</td><td>Stops and explains</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+<tr><td>T8</td><td>Disconnect network mid-run</td><td>Clear reason and retry option</td><td><span class="fill">[actual]</span></td><td><span class="fill">[pass/fail]</span></td></tr>
+</tbody></table></div>
+<p>Demo video timestamps for each test: <span class="fill">[e.g. T2 at 2:10, T7 at 3:40]</span>. Test data: <span class="fill">[state that all inputs were synthetic or non-confidential]</span>.</p>
+</section>
+
+<section id="build">
+<h2>Build thread and overrides</h2>
+<p>The full conversation that built this app and page: <a href="#build"><span class="fill">[paste public CRISP thread URL here]</span></a>. Test the link in a private window before you submit.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Moment</th><th>What the AI proposed</th><th>What I overrode and why</th><th>Thread</th></tr></thead>
+<tbody>
+<tr><td>Voice</td><td>Hard rejection of narrator-style phrases</td><td>Relaxed it after false positives; moved to few-shot guidance</td><td><span class="fill">[link]</span></td></tr>
+<tr><td>Privacy</td><td>Default storage location</td><td>Credentials and history appeared on a second machine, so I moved the database and settings into the user’s AppData folder</td><td><span class="fill">[link]</span></td></tr>
+<tr><td>Cost</td><td>Upload the PDF to the model</td><td>Parse locally first to remove binary uploads and image-token overhead</td><td><span class="fill">[link]</span></td></tr>
+<tr><td>Scope</td><td>Fixed dropdown for article count</td><td>Numeric Top-N after a 32-page paper produced too many minor stories</td><td><span class="fill">[link]</span></td></tr>
+<tr><td>Trust</td><td>Trust the model’s output</td><td>Added schema validation and low-temperature generation. Neither proves factual accuracy, hence the N1 measurement</td><td><span class="fill">[link]</span></td></tr>
+</tbody></table></div>
+<p>Documentation: <a href="mba-desk-documentation.md">architecture and prompt history (Markdown)</a>. Only claims backed by the thread or test log appear on this page.</p>
+</section>
+</main>
+
+<footer><div class="wrap">
+<p>Krishna Darak · AI PM Portfolio · <a href="index.html">Back to portfolio</a></p>
+<p>All screenshots and examples on this page are synthetic and labelled. No real customer data is shown.</p>
+</div></footer>
+</body>
+</html>
